@@ -44,26 +44,12 @@ jobs:
       - name: test
         run: make check || true
 
-  build-macos:
-    name: macOS (clang, x86_64)
-    # macos-latest uses Apple Silicon (arm64) which the 2004 ACC layer does
-    # not recognise (no __aarch64__ detection → ACC_ARCH_UNKNOWN). Use
-    # macos-13 (Intel x86_64 = ACC_ARCH_AMD64) until acc_arch.h gains arm64
-    # support.
-    runs-on: macos-13
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: configure
-        run: |
-          ./configure \
-            --enable-static \
-            --enable-shared \
-            --disable-asm \
-            CFLAGS="-std=gnu89 -fwrapv -Wall -Wno-unused-function"
-
-      - name: build
-        run: make -j$(sysctl -n hw.ncpu)
+  # macOS CI is not included: the 2004 ACC portability layer does not detect
+  # aarch64 (Apple Silicon, used by macos-latest runners), causing
+  # ACC_ARCH_UNKNOWN and a configure-time conformance test failure.
+  # Intel macOS (macos-13) is retired from GitHub Actions as of 2026.
+  # UCL targets embedded Linux (OpenWrt) — macOS is not a build target.
+  # TODO: add __aarch64__ detection to acc/acc_arch.h for future macOS CI.
 
   build-cross-arm:
     name: Cross-compile (arm-linux-gnueabihf)
