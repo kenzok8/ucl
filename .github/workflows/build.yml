@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ main ]
 
+# UCL uses a pre-generated ./configure from the original 2004 autoconf 2.59
+# release. The custom aclocal.m4 macros (mfx_*) reference internal autoconf
+# APIs removed in 2.70+, making autoreconf incompatible with modern systems.
+# OpenWrt handles autoreconf via its own toolchain-pinned autoconf version.
+# CI skips autoreconf and uses the bundled configure directly to validate C
+# compilation on modern GCC/Clang and key OpenWrt cross-compile targets.
+
 jobs:
   build-linux:
     name: Linux (${{ matrix.compiler }})
@@ -16,23 +23,14 @@ jobs:
         include:
           - compiler: gcc
             cc: gcc
-            cxx: g++
           - compiler: clang
             cc: clang
-            cxx: clang++
     steps:
       - uses: actions/checkout@v6
-
-      - name: Install dependencies
-        run: sudo apt-get install -y autoconf automake libtool
-
-      - name: autoreconf
-        run: autoreconf -fi
 
       - name: configure
         env:
           CC: ${{ matrix.cc }}
-          CXX: ${{ matrix.cxx }}
         run: |
           ./configure \
             --enable-static \
@@ -52,12 +50,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install dependencies
-        run: brew install autoconf automake libtool
-
-      - name: autoreconf
-        run: autoreconf -fi
-
       - name: configure
         run: |
           ./configure \
@@ -76,10 +68,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Install cross toolchain
-        run: sudo apt-get install -y autoconf automake libtool gcc-arm-linux-gnueabihf
-
-      - name: autoreconf
-        run: autoreconf -fi
+        run: sudo apt-get install -y gcc-arm-linux-gnueabihf
 
       - name: configure (cross)
         run: |
@@ -100,10 +89,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Install cross toolchain
-        run: sudo apt-get install -y autoconf automake libtool gcc-mipsel-linux-gnu
-
-      - name: autoreconf
-        run: autoreconf -fi
+        run: sudo apt-get install -y gcc-mipsel-linux-gnu
 
       - name: configure (cross)
         run: |

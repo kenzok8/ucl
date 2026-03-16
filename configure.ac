@@ -47,9 +47,7 @@ AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 AM_MAINTAINER_MODE
 
-if test -z "$ac_abs_top_srcdir"; then
-    _AC_SRCPATHS(.)
-fi
+dnl _AC_SRCPATHS removed in autoconf 2.70+; ac_abs_top_srcdir is always set now
 if test -r .Conf.settings1; then
     . ./.Conf.settings1
 fi
@@ -62,18 +60,18 @@ mfx_ACC_CHECK_ENDIAN
 AC_SYS_LARGEFILE
 
 AM_INIT_AUTOMAKE
-AM_CONFIG_HEADER(config.h:config.hin)
+AC_CONFIG_HEADERS([config.h:config.hin])
 
 AC_ENABLE_STATIC
 AC_DISABLE_SHARED
-AC_PROG_LIBTOOL
+LT_INIT
 
 
 # /***********************************************************************
 # // Checks for assembler
 # ************************************************************************/
 
-AC_ARG_ENABLE(asm, AC_HELP_STRING([--disable-asm], [disable i386 assembly versions]))
+AC_ARG_ENABLE(asm, AS_HELP_STRING([--disable-asm], [disable i386 assembly versions]))
 case $host_cpu in
     i?86) ;;
     *) enable_asm=no ;;
@@ -127,7 +125,7 @@ fi
 AC_TYPE_OFF_T
 AC_CHECK_TYPE(ptrdiff_t,long)
 AC_TYPE_SIZE_T
-AC_TYPE_SIGNAL
+dnl AC_TYPE_SIGNAL removed in autoconf 2.70+
 
 mfx_ACC_CHECK_SIZEOF
 mfx_CHECK_SIZEOF
