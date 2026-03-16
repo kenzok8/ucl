@@ -274,7 +274,7 @@ _ucl_config_check(void)
     {
         static int x[3];
         static unsigned xn = 3;
-        register unsigned j;
+        unsigned j;
 
         for (j = 0; j < xn; j++)
             x[j] = (int)j - 3;

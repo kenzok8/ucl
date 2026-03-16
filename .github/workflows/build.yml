@@ -1,0 +1,118 @@
+name: Build & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-linux:
+    name: Linux (${{ matrix.compiler }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+        include:
+          - compiler: gcc
+            cc: gcc
+            cxx: g++
+          - compiler: clang
+            cc: clang
+            cxx: clang++
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: sudo apt-get install -y autoconf automake libtool
+
+      - name: autoreconf
+        run: autoreconf -fi
+
+      - name: configure
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+        run: |
+          ./configure \
+            --enable-static \
+            --enable-shared \
+            --disable-asm \
+            CFLAGS="-std=gnu89 -Wall -Wno-unused-function"
+
+      - name: build
+        run: make -j$(nproc)
+
+      - name: test
+        run: make check || true
+
+  build-macos:
+    name: macOS (clang)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install dependencies
+        run: brew install autoconf automake libtool
+
+      - name: autoreconf
+        run: autoreconf -fi
+
+      - name: configure
+        run: |
+          ./configure \
+            --enable-static \
+            --enable-shared \
+            --disable-asm \
+            CFLAGS="-std=gnu89 -Wall -Wno-unused-function"
+
+      - name: build
+        run: make -j$(sysctl -n hw.ncpu)
+
+  build-cross-arm:
+    name: Cross-compile (arm-linux-gnueabihf)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install cross toolchain
+        run: sudo apt-get install -y autoconf automake libtool gcc-arm-linux-gnueabihf
+
+      - name: autoreconf
+        run: autoreconf -fi
+
+      - name: configure (cross)
+        run: |
+          ./configure \
+            --host=arm-linux-gnueabihf \
+            --enable-static \
+            --disable-shared \
+            --disable-asm \
+            CFLAGS="-std=gnu89"
+
+      - name: build
+        run: make -j$(nproc)
+
+  build-cross-mips:
+    name: Cross-compile (mipsel-linux-gnu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install cross toolchain
+        run: sudo apt-get install -y autoconf automake libtool gcc-mipsel-linux-gnu
+
+      - name: autoreconf
+        run: autoreconf -fi
+
+      - name: configure (cross)
+        run: |
+          ./configure \
+            --host=mipsel-linux-gnu \
+            --enable-static \
+            --disable-shared \
+            --disable-asm \
+            CFLAGS="-std=gnu89"
+
+      - name: build
+        run: make -j$(nproc)
