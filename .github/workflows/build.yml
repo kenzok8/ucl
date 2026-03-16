@@ -56,7 +56,7 @@ jobs:
             --enable-static \
             --enable-shared \
             --disable-asm \
-            CFLAGS="-std=gnu89 -Wall -Wno-unused-function"
+            CFLAGS="-std=gnu89 -fwrapv -Wall -Wno-unused-function"
 
       - name: build
         run: make -j$(sysctl -n hw.ncpu)
