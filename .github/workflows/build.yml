@@ -45,8 +45,12 @@ jobs:
         run: make check || true
 
   build-macos:
-    name: macOS (clang)
-    runs-on: macos-latest
+    name: macOS (clang, x86_64)
+    # macos-latest uses Apple Silicon (arm64) which the 2004 ACC layer does
+    # not recognise (no __aarch64__ detection → ACC_ARCH_UNKNOWN). Use
+    # macos-13 (Intel x86_64 = ACC_ARCH_AMD64) until acc_arch.h gains arm64
+    # support.
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v6
 
