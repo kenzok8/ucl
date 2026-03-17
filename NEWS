@@ -2,6 +2,14 @@
 User visible changes for the UCL data compression library
 =======================================================================
 
+Changes in 1.04.1 (18 Mar 2026)
+  * Added ptrdiff_t configure check include guards for modern toolchains.
+  * Updated CI workflows to current GitHub Actions versions and stricter tests.
+  * Added aarch64 Linux cross-compile validation in CI.
+
+Changes in 1.04 (16 Mar 2026)
+  * Fork maintenance release: version bump from 1.03 to 1.04.
+
 Changes in 1.03 (20 Jul 2004)
   * Better Win64 support.
   * Updated the configure system.
@@ -35,4 +43,3 @@ Changes in 0.91 (19 Apr 2000)
 
 Changes in 0.90 (24 Feb 2000)
   * First public release.
-

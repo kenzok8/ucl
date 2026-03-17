@@ -26,7 +26,7 @@ jobs:
           - compiler: clang
             cc: clang
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: configure
         env:
@@ -42,7 +42,7 @@ jobs:
         run: make -j$(nproc)
 
       - name: test
-        run: make check || true
+        run: make check
 
   # macOS CI is not included: the 2004 ACC portability layer does not detect
   # aarch64 (Apple Silicon, used by macos-latest runners), causing
@@ -55,7 +55,7 @@ jobs:
     name: Cross-compile (arm-linux-gnueabihf)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install cross toolchain
         run: sudo apt-get install -y gcc-arm-linux-gnueabihf
@@ -76,7 +76,28 @@ jobs:
     name: Cross-compile (mipsel-linux-gnu)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
+
+  build-cross-aarch64:
+    name: Cross-compile (aarch64-linux-gnu)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install cross toolchain
+        run: sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: configure (cross)
+        run: |
+          ./configure \
+            --host=aarch64-linux-gnu \
+            --enable-static \
+            --disable-shared \
+            --disable-asm \
+            CFLAGS="-std=gnu89"
+
+      - name: build
+        run: make -j$(nproc)
 
       - name: Install cross toolchain
         run: sudo apt-get install -y gcc-mipsel-linux-gnu

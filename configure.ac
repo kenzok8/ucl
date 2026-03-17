@@ -37,7 +37,7 @@ This configure script may be copied, distributed and modified under the
 terms of the GNU General Public License; see COPYING for more details.])
 
 AC_PREREQ([2.69])
-AC_INIT([ucl],[1.04],[https://github.com/kenzok8/ucl/issues])
+AC_INIT([ucl],[1.04.1],[https://github.com/kenzok8/ucl/issues])
 AC_MSG_NOTICE([Configuring UCL $PACKAGE_VERSION])
 AC_CONFIG_SRCDIR(src/ucl_init.c)
 AC_CONFIG_AUX_DIR(acconfig)
@@ -123,7 +123,7 @@ fi
 # ************************************************************************/
 
 AC_TYPE_OFF_T
-AC_CHECK_TYPE(ptrdiff_t,long)
+AC_CHECK_TYPE([ptrdiff_t],[long],[],[[#include <stddef.h>]])
 AC_TYPE_SIZE_T
 dnl AC_TYPE_SIGNAL removed in autoconf 2.70+
 

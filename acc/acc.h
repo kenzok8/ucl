@@ -70,6 +70,7 @@
 
 
 #include <limits.h>
+#include <stddef.h>
 #include ACC_CONFIG_INCLUDE("acc_init.h")
 #include ACC_CONFIG_INCLUDE("acc_os.h")
 #include ACC_CONFIG_INCLUDE("acc_cc.h")

@@ -37,9 +37,9 @@
 #ifndef __UCLCONF_H_INCLUDED
 #define __UCLCONF_H_INCLUDED
 
-#define UCL_VERSION             0x010300L
-#define UCL_VERSION_STRING      "1.03"
-#define UCL_VERSION_DATE        "Jul 20 2004"
+#define UCL_VERSION             0x010401L
+#define UCL_VERSION_STRING      "1.04.1"
+#define UCL_VERSION_DATE        "Mar 18 2026"
 
 /* internal Autoconf configuration file - only used when building UCL */
 #if defined(UCL_HAVE_CONFIG_H)
@@ -436,4 +436,3 @@ UCL_EXTERN(unsigned) __ucl_align_gap(const ucl_voidp _ptr, ucl_uint _size);
 #endif
 
 #endif /* already included */
-
