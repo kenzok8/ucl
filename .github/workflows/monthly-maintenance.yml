@@ -1,0 +1,25 @@
+name: monthly-maintenance
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 4 1 * *'
+
+jobs:
+  audit-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Audit repository structure
+        run: |
+          set -euo pipefail
+          count_o=$(find asm -type f -name '*.o' | wc -l | tr -d ' ')
+          count_obj=$(find asm -type f -name '*.obj' | wc -l | tr -d ' ')
+          echo "Committed .o files: $count_o"
+          echo "Committed .obj files: $count_obj"
+          test "$count_o" -gt 0
+          test "$count_obj" -gt 0
+          test -d B
+          test -d upx

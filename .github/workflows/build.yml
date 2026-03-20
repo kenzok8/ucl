@@ -26,7 +26,7 @@ jobs:
           - compiler: clang
             cc: clang
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
 
       - name: configure
         env:
@@ -55,7 +55,7 @@ jobs:
     name: Cross-compile (arm-linux-gnueabihf)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
 
       - name: Install cross toolchain
         run: sudo apt-get install -y gcc-arm-linux-gnueabihf
@@ -76,13 +76,13 @@ jobs:
     name: Cross-compile (mipsel-linux-gnu)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
 
   build-cross-aarch64:
     name: Cross-compile (aarch64-linux-gnu)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6.0.2
 
       - name: Install cross toolchain
         run: sudo apt-get install -y gcc-aarch64-linux-gnu
