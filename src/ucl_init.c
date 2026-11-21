@@ -96,7 +96,7 @@ static ucl_bool ptr_check(void)
 {
     ucl_bool r = 1;
     int i;
-    unsigned char _wrkmem[10 * sizeof(ucl_bytep) + sizeof(ucl_align_t)];
+    unsigned char _wrkmem[10 * sizeof(ucl_bytep) + sizeof(ucl_align_t)] = { 0 };
     ucl_bytep wrkmem;
     ucl_bytepp dict;
     unsigned char x[4 * sizeof(ucl_align_t)];

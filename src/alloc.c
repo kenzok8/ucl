@@ -49,7 +49,8 @@ UCL_PRIVATE(ucl_voidp)
 ucl_malloc_internal(ucl_uint size)
 {
     ucl_voidp p = NULL;
-    if (size < ~(size_t)0)
+    /* only allocate when size fits into size_t without truncation */
+    if ((size_t) size == size)
         p = (ucl_voidp) malloc((size_t) size);
     return p;
 }

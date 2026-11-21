@@ -2,6 +2,19 @@
 User visible changes for the UCL data compression library
 =======================================================================
 
+Changes in 1.04.2 (21 Nov 2026)
+  * Fix the ACC conformance test on modern compilers: the sign-bit checks
+    in acc_chk.ch shifted 1 into the sign bit of a signed type, which is
+    undefined behaviour and no longer folds to a constant expression, so a
+    plain ./configure failed with default compiler flags. The checks now
+    use an unsigned shift plus a cast to the signed type.
+  * Clean build with -Wall -Wextra: silence -Wunused-local-typedefs from
+    ACC_COMPILE_TIME_ASSERT, the -Wtype-limits check in ucl_malloc_internal,
+    and the -Wmaybe-uninitialized warning in ptr_check.
+  * Remove 8 unused ACC layer files (acc_cxx.h, acc_chkr.ch, acc_lib.ch,
+    acclib/fnmatch.ch, getopt.ch, hsread.ch, perfctr.ch, rdtsc.ch).
+  * CI: run the examples/simple smoke test and enable -Wextra for gcc.
+
 Changes in 1.04.1 (18 Mar 2026)
   * Added ptrdiff_t configure check include guards for modern toolchains.
   * Updated CI workflows to current GitHub Actions versions and stricter tests.

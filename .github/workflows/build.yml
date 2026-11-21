@@ -23,8 +23,10 @@ jobs:
         include:
           - compiler: gcc
             cc: gcc
+            cflags: -std=gnu89 -Wall -Wextra -Wno-unused-function
           - compiler: clang
             cc: clang
+            cflags: -std=gnu89 -Wall -Wno-unused-function
     steps:
       - uses: actions/checkout@v6.0.2
 
@@ -36,13 +38,16 @@ jobs:
             --enable-static \
             --enable-shared \
             --disable-asm \
-            CFLAGS="-std=gnu89 -Wall -Wno-unused-function"
+            CFLAGS="${{ matrix.cflags }}"
 
       - name: build
         run: make -j$(nproc)
 
       - name: test
-        run: make check
+        run: |
+          make check
+          # make check defines no tests; run the example as a smoke test
+          ./examples/simple
 
   # macOS CI is not included: the 2004 ACC portability layer does not detect
   # aarch64 (Apple Silicon, used by macos-latest runners), causing

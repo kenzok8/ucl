@@ -101,7 +101,7 @@
 /* This must appear within a function body. */
 #if !defined(ACC_COMPILE_TIME_ASSERT)
 #  if (ACC_CC_AZTECC)
-#    define ACC_COMPILE_TIME_ASSERT(e)  {typedef int __acc_cta_t[1-!(e)];}
+#    define ACC_COMPILE_TIME_ASSERT(e)  {typedef int __acc_cta_t[1-!(e)]; (void) sizeof(__acc_cta_t);}
 #  elif (ACC_CC_DMC || ACC_CC_PACIFICC || ACC_CC_SYMANTECC || ACC_CC_ZORTECHC)
 #    define ACC_COMPILE_TIME_ASSERT(e)  switch(0) case 1:case !(e):break;
 #  elif (ACC_CC_MSC && (_MSC_VER < 900))
@@ -109,7 +109,7 @@
 #  elif (ACC_CC_TURBOC && (__TURBOC__ == 0x0295))
 #    define ACC_COMPILE_TIME_ASSERT(e)  switch(0) case 1:case !(e):break;
 #  else
-#    define ACC_COMPILE_TIME_ASSERT(e)  {typedef int __acc_cta_t[1-2*!(e)];}
+#    define ACC_COMPILE_TIME_ASSERT(e)  {typedef int __acc_cta_t[1-2*!(e)]; (void) sizeof(__acc_cta_t);}
 #  endif
 #endif
 

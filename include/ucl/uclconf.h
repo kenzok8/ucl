@@ -37,9 +37,9 @@
 #ifndef __UCLCONF_H_INCLUDED
 #define __UCLCONF_H_INCLUDED
 
-#define UCL_VERSION             0x010401L
-#define UCL_VERSION_STRING      "1.04.1"
-#define UCL_VERSION_DATE        "Mar 18 2026"
+#define UCL_VERSION             0x010402L
+#define UCL_VERSION_STRING      "1.04.2"
+#define UCL_VERSION_DATE        "Nov 21 2026"
 
 /* internal Autoconf configuration file - only used when building UCL */
 #if defined(UCL_HAVE_CONFIG_H)

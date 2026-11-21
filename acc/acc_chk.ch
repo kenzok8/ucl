@@ -198,17 +198,21 @@
 // check arithmetics
 **************************************************************************/
 
+    /* NOTE: sign-bit checks use an unsigned shift plus a cast to the
+       signed type: shifting 1 into the sign bit of a signed type is
+       undefined behaviour, and modern compilers no longer fold it
+       in a constant expression, which broke the file-scope asserts. */
     ACCCHK_ASSERT((((1u  << 15) + 1) >> 15) == 1)
     ACCCHK_ASSERT((((1ul << 31) + 1) >> 31) == 1)
 
 #if (ACC_CC_TURBOC && (__TURBOC__ < 0x0150))
     /* TC 1.0 bug, probably due to ACC_BROKEN_INTEGRAL_PROMOTION ?? */
 #else
-    ACCCHK_ASSERT((1   << (8*SIZEOF_INT-1)) < 0)
+    ACCCHK_ASSERT(((int) (1u << (8*SIZEOF_INT-1))) < 0)
 #endif
     ACCCHK_ASSERT((1u  << (8*SIZEOF_INT-1)) > 0)
 
-    ACCCHK_ASSERT((1l  << (8*SIZEOF_LONG-1)) < 0)
+    ACCCHK_ASSERT(((long) (1ul << (8*SIZEOF_LONG-1))) < 0)
     ACCCHK_ASSERT((1ul << (8*SIZEOF_LONG-1)) > 0)
 
 #if defined(acc_int32e_t)
@@ -238,9 +242,9 @@
     ACCCHK_ASSERT(sizeof(ACC_INT32E_C(0)) == SIZEOF_ACC_INT32E_T)
     ACCCHK_ASSERT(sizeof(ACC_UINT32E_C(0)) == SIZEOF_ACC_INT32E_T)
 #endif
-    ACCCHK_ASSERT((ACC_INT32E_C(1)  << (8*SIZEOF_ACC_INT32E_T-1)) < 0)
+    ACCCHK_ASSERT(((acc_int32e_t) (ACC_UINT32E_C(1) << (8*SIZEOF_ACC_INT32E_T-1))) < 0)
     ACCCHK_ASSERT((ACC_UINT32E_C(1) << (8*SIZEOF_ACC_INT32E_T-1)) > 0)
-    ACCCHK_ASSERT((ACC_INT32E_C(1)  << (int)(8*sizeof(ACC_INT32E_C(1))-1)) < 0)
+    ACCCHK_ASSERT(((acc_int32e_t) (ACC_UINT32E_C(1) << (int)(8*sizeof(ACC_UINT32E_C(1))-1))) < 0)
     ACCCHK_ASSERT((ACC_UINT32E_C(1) << (int)(8*sizeof(ACC_UINT32E_C(1))-1)) > 0)
     ACCCHK_ASSERT(ACC_INT32E_C(2147483647)      > 0)
     ACCCHK_ASSERT(ACC_INT32E_C(-2147483647) -1  < 0)
@@ -274,9 +278,9 @@
     ACCCHK_ASSERT(sizeof(ACC_INT32L_C(0)) == SIZEOF_ACC_INT32L_T)
     ACCCHK_ASSERT(sizeof(ACC_UINT32L_C(0)) == SIZEOF_ACC_INT32L_T)
 #endif
-    ACCCHK_ASSERT((ACC_INT32L_C(1)  << (8*SIZEOF_ACC_INT32L_T-1)) < 0)
+    ACCCHK_ASSERT(((acc_int32l_t) (ACC_UINT32L_C(1) << (8*SIZEOF_ACC_INT32L_T-1))) < 0)
     ACCCHK_ASSERT((ACC_UINT32L_C(1) << (8*SIZEOF_ACC_INT32L_T-1)) > 0)
-    ACCCHK_ASSERT((ACC_INT32L_C(1)  << (int)(8*sizeof(ACC_INT32L_C(1))-1)) < 0)
+    ACCCHK_ASSERT(((acc_int32l_t) (ACC_UINT32L_C(1) << (int)(8*sizeof(ACC_UINT32L_C(1))-1))) < 0)
     ACCCHK_ASSERT((ACC_UINT32L_C(1) << (int)(8*sizeof(ACC_UINT32L_C(1))-1)) > 0)
     ACCCHK_ASSERT(ACC_INT32L_C(2147483647)      > 0)
     ACCCHK_ASSERT(ACC_INT32L_C(-2147483647) -1  < 0)
@@ -312,9 +316,9 @@
     ACCCHK_ASSERT(sizeof(ACC_INT32F_C(0)) == SIZEOF_ACC_INT32F_T)
     ACCCHK_ASSERT(sizeof(ACC_UINT32F_C(0)) == SIZEOF_ACC_INT32F_T)
 #endif
-    ACCCHK_ASSERT((ACC_INT32F_C(1)  << (8*SIZEOF_ACC_INT32F_T-1)) < 0)
+    ACCCHK_ASSERT(((acc_int32f_t) (ACC_UINT32F_C(1) << (8*SIZEOF_ACC_INT32F_T-1))) < 0)
     ACCCHK_ASSERT((ACC_UINT32F_C(1) << (8*SIZEOF_ACC_INT32F_T-1)) > 0)
-    ACCCHK_ASSERT((ACC_INT32F_C(1)  << (int)(8*sizeof(ACC_INT32F_C(1))-1)) < 0)
+    ACCCHK_ASSERT(((acc_int32f_t) (ACC_UINT32F_C(1) << (int)(8*sizeof(ACC_UINT32F_C(1))-1))) < 0)
     ACCCHK_ASSERT((ACC_UINT32F_C(1) << (int)(8*sizeof(ACC_UINT32F_C(1))-1)) > 0)
     ACCCHK_ASSERT(ACC_INT32F_C(2147483647)      > 0)
     ACCCHK_ASSERT(ACC_INT32F_C(-2147483647) -1  < 0)
@@ -352,7 +356,7 @@
     ACCCHK_ASSERT(sizeof(ACC_UINT64L_C(0)) == SIZEOF_ACC_INT64L_T)
 #endif
 #endif /* ACCCHK_CONFIG_PEDANTIC */
-    ACCCHK_ASSERT((ACC_INT64L_C(1)  << (8*SIZEOF_ACC_INT64L_T-1)) < 0)
+    ACCCHK_ASSERT(((acc_int64l_t) (ACC_UINT64L_C(1) << (8*SIZEOF_ACC_INT64L_T-1))) < 0)
     ACCCHK_ASSERT((ACC_UINT64L_C(1) << (8*SIZEOF_ACC_INT64L_T-1)) > 0)
 #if (ACC_CC_GNUC && (ACC_CC_GNUC < 0x020600ul))
     /* avoid pedantic warning */
@@ -445,7 +449,7 @@
     /* NDP C is broken */
 #elif !defined(ACC_BROKEN_INTEGRAL_PROMOTION) && (SIZEOF_INT > 1)
     /* check that the compiler correctly promotes integrals */
-    ACCCHK_ASSERT( (((unsigned char)128) << (int)(8*sizeof(int)-8)) < 0)
+    ACCCHK_ASSERT( ((int) (((unsigned) (unsigned char)128) << (int)(8*sizeof(int)-8))) < 0)
 #endif
 
 
